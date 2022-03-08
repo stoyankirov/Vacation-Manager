@@ -13,12 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\VacationManager.Business\VacationManager.Business.csproj" />
+    <ProjectReference Include="..\VacationManager.Data\VacationManager.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VacationManager.Business\VacationManager.Business.csproj" />
-    <ProjectReference Include="..\VacationManager.Data\VacationManager.Data.csproj" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 
 </Project>
