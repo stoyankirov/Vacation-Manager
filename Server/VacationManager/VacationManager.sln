@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31829.152
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationManager.API", "VacationManager.API\VacationManager.API.csproj", "{D4505BD2-C784-4E06-A6E2-F50DF683E974}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D4505BD2-C784-4E06-A6E2-F50DF683E974}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4505BD2-C784-4E06-A6E2-F50DF683E974}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4505BD2-C784-4E06-A6E2-F50DF683E974}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4505BD2-C784-4E06-A6E2-F50DF683E974}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F367D5F7-11ED-4D88-9530-5A89DED401FF}
+	EndGlobalSection
+EndGlobal
