@@ -12,4 +12,9 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\VacationManager.Business\VacationManager.Business.csproj" />
+    <ProjectReference Include="..\VacationManager.Data\VacationManager.Data.csproj" />
+  </ItemGroup>
+
 </Project>

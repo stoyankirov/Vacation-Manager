@@ -1,7 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\VacationManager.Business.Contracts\VacationManager.Business.Contracts.csproj" />
+		<ProjectReference Include="..\VacationManager.Core\VacationManager.Core.csproj" />
+		<ProjectReference Include="..\VacationManager.Data.Contracts\VacationManager.Data.Contracts.csproj" />
+	</ItemGroup>
 
 </Project>
