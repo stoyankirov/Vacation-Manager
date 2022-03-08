@@ -5,6 +5,18 @@ VisualStudioVersion = 16.0.31829.152
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationManager.API", "VacationManager.API\VacationManager.API.csproj", "{D4505BD2-C784-4E06-A6E2-F50DF683E974}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationManager.Business", "VacationManager.Business\VacationManager.Business.csproj", "{9650E8A0-4DDA-4C90-9830-20F40F41E8AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationManager.Business.Contracts", "VacationManager.Business.Contracts\VacationManager.Business.Contracts.csproj", "{0C7E6166-3D52-4578-AA15-53FE9965D0CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationManager.Core", "VacationManager.Core\VacationManager.Core.csproj", "{2D00209E-1968-4268-A55F-F34688A20126}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationManager.Data", "VacationManager.Data\VacationManager.Data.csproj", "{C8EACB9D-F52D-4AD4-A7D6-E13512DCB209}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationManager.Data.Contracts", "VacationManager.Data.Contracts\VacationManager.Data.Contracts.csproj", "{35D01BC8-DFA7-4D13-94CC-EC1545315FE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationManager.Domain", "VacationManager.Domain\VacationManager.Domain.csproj", "{1A5881B7-D473-402C-A115-B91966607BCA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +27,30 @@ Global
 		{D4505BD2-C784-4E06-A6E2-F50DF683E974}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4505BD2-C784-4E06-A6E2-F50DF683E974}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4505BD2-C784-4E06-A6E2-F50DF683E974}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9650E8A0-4DDA-4C90-9830-20F40F41E8AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9650E8A0-4DDA-4C90-9830-20F40F41E8AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9650E8A0-4DDA-4C90-9830-20F40F41E8AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9650E8A0-4DDA-4C90-9830-20F40F41E8AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C7E6166-3D52-4578-AA15-53FE9965D0CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C7E6166-3D52-4578-AA15-53FE9965D0CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C7E6166-3D52-4578-AA15-53FE9965D0CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C7E6166-3D52-4578-AA15-53FE9965D0CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D00209E-1968-4268-A55F-F34688A20126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D00209E-1968-4268-A55F-F34688A20126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D00209E-1968-4268-A55F-F34688A20126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D00209E-1968-4268-A55F-F34688A20126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8EACB9D-F52D-4AD4-A7D6-E13512DCB209}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8EACB9D-F52D-4AD4-A7D6-E13512DCB209}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8EACB9D-F52D-4AD4-A7D6-E13512DCB209}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8EACB9D-F52D-4AD4-A7D6-E13512DCB209}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35D01BC8-DFA7-4D13-94CC-EC1545315FE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35D01BC8-DFA7-4D13-94CC-EC1545315FE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35D01BC8-DFA7-4D13-94CC-EC1545315FE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35D01BC8-DFA7-4D13-94CC-EC1545315FE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A5881B7-D473-402C-A115-B91966607BCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A5881B7-D473-402C-A115-B91966607BCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A5881B7-D473-402C-A115-B91966607BCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A5881B7-D473-402C-A115-B91966607BCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
