@@ -2,16 +2,29 @@ namespace VacationManager.API
 {
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.OpenApi.Models;
+    using System;
+    using System.Reflection;
+    using VacationManager.Data;
 
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+        private readonly string _assemblyName;
+        private readonly string _assemblyVersion;
+        private readonly string _applicationBaseDirectory;
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
+            var assemblyName = Assembly.GetExecutingAssembly().GetName();
+            _assemblyName = assemblyName.Name;
+            _assemblyVersion = $"v{assemblyName.Version?.Major ?? 1}";
+            _applicationBaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         }
 
         public IConfiguration Configuration { get; }
@@ -20,6 +33,11 @@ namespace VacationManager.API
         {
 
             services.AddControllers();
+
+            services.AddDbContext<VacationManagerContext>(options => options
+                .UseSqlServer(this._configuration["Secrets:ConnectionString"])
+            );
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "VacationManager.API", Version = "v1" });
