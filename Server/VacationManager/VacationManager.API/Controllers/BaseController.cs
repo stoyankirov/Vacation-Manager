@@ -1,14 +1,9 @@
 ﻿namespace VacationManager.API.Controllers
 {
-    using System;
-    using VacationManager.Domain;
+    using Microsoft.AspNetCore.Mvc;
 
-    public class BaseController
+    public class BaseController : ControllerBase
     {
-        protected void ValidateRequest(Request request)
-        {
-            if (request == null)
-                throw new ArgumentNullException("Invalid request!");
-        }
+
     }
 }

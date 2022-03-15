@@ -22,7 +22,7 @@
         /// Add an entity.
         /// <param name="entity">The entity instance.</param>
         /// </summary>
-        Task AddAsync(TEntity entity);
+        void AddAsync(TEntity entity);
 
         /// <summary>
         /// Update an entity.
