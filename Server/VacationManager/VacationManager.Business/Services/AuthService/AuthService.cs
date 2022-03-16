@@ -1,4 +1,4 @@
-﻿namespace VacationManager.Business.Services.UserService
+﻿namespace VacationManager.Business.Services.AuthService
 {
     using System;
     using VacationManager.Business.Contracts.Services;
@@ -7,7 +7,7 @@
     using VacationManager.Domain.Entities;
     using VacationManager.Domain.Requests;
 
-    public class AuthService : Service, IAuthService
+    public partial class AuthService : Service, IAuthService
     {
         private readonly IUserRepository _userRepository;
 
@@ -19,6 +19,7 @@
         public void Register(RegisterRequest request)
         {
             this.ValidateRequest(request);
+            this.ValidateUserExistance(request.Email);
 
             var passwordSalt = string.Empty;
             var passwordHash = PasswordHasher
