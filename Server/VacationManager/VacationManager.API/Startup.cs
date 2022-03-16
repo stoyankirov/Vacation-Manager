@@ -12,7 +12,7 @@ namespace VacationManager.API
     using System.Text;
     using System.Text.Json;
     using VacationManager.Business.Contracts.Services;
-    using VacationManager.Business.Services.UserService;
+    using VacationManager.Business.Services.AuthService;
     using VacationManager.Core.Constants;
     using VacationManager.Data;
     using VacationManager.Data.Contracts;
