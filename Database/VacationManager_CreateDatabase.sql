@@ -2,8 +2,16 @@ CREATE DATABASE VacationManager
 
 USE VacationManager
 
+CREATE TABLE ConfirmRegistrationCode (
+	Id UNIQUEIDENTIFIER NOT NULL,
+	Code VARCHAR(10) NOT NULL,
+	ExpirationDate DATE DEFAULT dateadd(month,1,getdate()),
+	CONSTRAINT PK_ConfirmRegistrationCode PRIMARY KEY (Id)
+)
+
 CREATE TABLE [User] (
 	Id UNIQUEIDENTIFIER NOT NULL,
+	ConfirmRegistrationCodeId UNIQUEIDENTIFIER NOT NULL,
 	Email VARCHAR(100) NOT NULL,
 	[Password] VARCHAR(100) NOT NULL,
 	PasswordSalt VARCHAR(100) NOT NULL,
@@ -11,7 +19,8 @@ CREATE TABLE [User] (
 	IsBanned BIT DEFAULT 0,
 	IsConfirmed BIT DEFAULT 0,
 	RegistrationDate DATE DEFAULT GETDATE(),
-	CONSTRAINT PK_User PRIMARY KEY (Id)
+	CONSTRAINT PK_User PRIMARY KEY (Id),
+	CONSTRAINT FK_UserConfirmRegistrationCode FOREIGN KEY (ConfirmRegistrationCodeId) REFERENCES ConfirmRegistrationCode(Id)
 )
 
 CREATE TABLE PropertyType (

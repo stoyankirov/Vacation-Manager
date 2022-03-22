@@ -9,6 +9,7 @@ namespace VacationManager.Domain.Entities
     {
         public Guid Id { get; set; }
         public Guid PropertyId { get; set; }
+        public string Code { get; set; }
         public int DiscountPercent { get; set; }
         public DateTime ValidFrom { get; set; }
         public DateTime? ValidTo { get; set; }

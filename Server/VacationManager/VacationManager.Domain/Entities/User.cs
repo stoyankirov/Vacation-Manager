@@ -15,6 +15,7 @@ namespace VacationManager.Domain.Entities
         }
 
         public Guid Id { get; set; }
+        public Guid ConfirmRegistrationCodeId { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public string PasswordSalt { get; set; }
@@ -23,6 +24,7 @@ namespace VacationManager.Domain.Entities
         public bool? IsConfirmed { get; set; }
         public DateTime? RegistrationDate { get; set; }
 
+        public virtual ConfirmRegistrationCode ConfirmRegistrationCode { get; set; }
         public virtual ICollection<Property> Properties { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }

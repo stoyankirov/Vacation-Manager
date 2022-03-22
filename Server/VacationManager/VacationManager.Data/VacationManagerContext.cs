@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using VacationManager.Domain.Entities;
 
 #nullable disable
@@ -16,6 +18,7 @@ namespace VacationManager.Data
         {
         }
 
+        public virtual DbSet<ConfirmRegistrationCode> ConfirmRegistrationCodes { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<DiscountCode> DiscountCodes { get; set; }
         public virtual DbSet<Facility> Facilities { get; set; }
@@ -34,6 +37,22 @@ namespace VacationManager.Data
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Latin1_General_CI_AS");
 
+            modelBuilder.Entity<ConfirmRegistrationCode>(entity =>
+            {
+                entity.ToTable("ConfirmRegistrationCode");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ExpirationDate)
+                    .HasColumnType("date")
+                    .HasDefaultValueSql("(dateadd(month,(1),getdate()))");
+            });
+
             modelBuilder.Entity<Country>(entity =>
             {
                 entity.ToTable("Country");
@@ -51,6 +70,11 @@ namespace VacationManager.Data
                 entity.ToTable("DiscountCode");
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ValidFrom).HasColumnType("datetime");
 
@@ -303,6 +327,12 @@ namespace VacationManager.Data
                 entity.Property(e => e.RegistrationDate)
                     .HasColumnType("date")
                     .HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.ConfirmRegistrationCode)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.ConfirmRegistrationCodeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserConfirmRegistrationCode");
             });
 
             OnModelCreatingPartial(modelBuilder);

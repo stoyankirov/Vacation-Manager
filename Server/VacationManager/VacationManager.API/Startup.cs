@@ -9,12 +9,9 @@ namespace VacationManager.API
     using Microsoft.OpenApi.Models;
     using System;
     using System.Reflection;
-    using System.Text;
-    using System.Text.Json;
     using VacationManager.API.Extensions;
     using VacationManager.Business.Contracts.Services;
     using VacationManager.Business.Services.AuthService;
-    using VacationManager.Core.Constants;
     using VacationManager.Data;
     using VacationManager.Data.Contracts;
     using VacationManager.Data.Repositories;
