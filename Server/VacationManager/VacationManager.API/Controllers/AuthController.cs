@@ -1,7 +1,10 @@
 ﻿namespace VacationManager.API.Controllers
 {
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using VacationManager.Business.Contracts.Services;
+    using VacationManager.Domain.Enums;
+    using VacationManager.Domain.Models;
     using VacationManager.Domain.Requests;
 
     [ApiController]
@@ -19,6 +22,13 @@
         [Route("Register")]
         public IActionResult Register(RegisterRequest request)
         {
+            bool userExists = this._authService.UserExists(request.Email);
+
+            if (userExists)
+            {
+                return Conflict(new Message(StatusCodes.Status409Conflict, MessageCode.UserExists));
+            }
+
             this._authService.Register(request);
 
             return Ok();

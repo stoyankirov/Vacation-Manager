@@ -5,15 +5,6 @@
 
     public partial class AuthService : Service, IAuthService
     {
-        private void ValidateUserExistance(string email)
-        {
-            var user = this._userRepository
-                .GetUserByEmail(email);
 
-            if (user != null)
-            {
-                throw new ArgumentException("Email is already taken.");
-            }
-        }
     }
 }
