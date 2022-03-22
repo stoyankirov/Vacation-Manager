@@ -4,6 +4,7 @@
 
     public interface IAuthService
     {
+        bool UserExists(string email);
         void Register(RegisterRequest request);
     }
 }

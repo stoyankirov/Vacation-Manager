@@ -11,6 +11,7 @@ namespace VacationManager.API
     using System.Reflection;
     using System.Text;
     using System.Text.Json;
+    using VacationManager.API.Extensions;
     using VacationManager.Business.Contracts.Services;
     using VacationManager.Business.Services.AuthService;
     using VacationManager.Core.Constants;
@@ -71,21 +72,8 @@ namespace VacationManager.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VacationManager.API v1"));
             }
-            else
-            {
-                app.UseExceptionHandler(errorApp =>
-                {
-                    errorApp.Run(async context =>
-                    {
-                        context.Response.StatusCode = 500;
-                        context.Response.ContentType = "application/json";
 
-                        var json = JsonSerializer.Serialize(new ApiError(ApplicationConstants.ErrorOccurred));
-                        byte[] data = Encoding.UTF8.GetBytes(json);
-                        await context.Response.Body.WriteAsync(data, 0, data.Length);
-                    });
-                });
-            }
+            app.ConfigureExceptionHandler();
 
             app.UseHttpsRedirection();
 

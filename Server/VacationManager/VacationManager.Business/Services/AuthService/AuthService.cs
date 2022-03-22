@@ -16,10 +16,14 @@
             this._userRepository = userRepository;
         }
 
+        public bool UserExists(string email)
+            => this._userRepository.GetUserByEmail(email) != null
+                ? true
+                : false;
+
         public void Register(RegisterRequest request)
         {
             this.ValidateRequest(request);
-            this.ValidateUserExistance(request.Email);
 
             var passwordSalt = string.Empty;
             var passwordHash = PasswordHasher
