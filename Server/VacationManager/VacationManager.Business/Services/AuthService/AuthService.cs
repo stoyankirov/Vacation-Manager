@@ -1,6 +1,7 @@
 ﻿namespace VacationManager.Business.Services.AuthService
 {
     using System;
+    using System.Transactions;
     using VacationManager.Business.Contracts.Services;
     using VacationManager.Core.Utility;
     using VacationManager.Data.Contracts;
@@ -10,10 +11,13 @@
     public partial class AuthService : Service, IAuthService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IConfirmRegistrationCodeRepository _confirmRegistrationCodeRepository;
 
-        public AuthService(IUserRepository userRepository)
+        public AuthService(IUserRepository userRepository,
+            IConfirmRegistrationCodeRepository confirmRegistrationCodeRepository)
         {
             this._userRepository = userRepository;
+            this._confirmRegistrationCodeRepository = confirmRegistrationCodeRepository;
         }
 
         public bool UserExists(string email)
@@ -29,15 +33,23 @@
             var passwordHash = PasswordHasher
                 .Hash(request.Password, out passwordSalt);
 
-            var userEntity = new User()
+            using (TransactionScope scope = new TransactionScope())
             {
-                Id = Guid.NewGuid(),
-                Email = request.Email,
-                Password = passwordHash,
-                PasswordSalt = passwordSalt
-            };
+                var codeId = this.GenerateConfirmRegistrationCode();
 
-            this._userRepository.AddAsync(userEntity);
+                var userEntity = new User()
+                {
+                    Id = Guid.NewGuid(),
+                    Email = request.Email,
+                    Password = passwordHash,
+                    PasswordSalt = passwordSalt,
+                    ConfirmRegistrationCodeId = codeId
+                };
+
+                this._userRepository.AddAsync(userEntity);
+
+                scope.Complete();
+            }
         }
     }
 }

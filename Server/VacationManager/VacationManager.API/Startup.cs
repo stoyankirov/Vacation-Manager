@@ -44,7 +44,9 @@ namespace VacationManager.API
             );
 
             services.AddScoped<IAuthService, AuthService>();
+
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IConfirmRegistrationCodeRepository, ConfirmRegistrationCodeRepository>();
 
             services.AddSwaggerGen(c =>
             {
