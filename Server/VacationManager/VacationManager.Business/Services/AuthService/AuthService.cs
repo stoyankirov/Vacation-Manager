@@ -46,6 +46,7 @@
                     Email = request.Email,
                     Password = passwordHash,
                     PasswordSalt = passwordSalt,
+                    Role = (int)request.UserRole,
                     ConfirmRegistrationCodeId = confirmationCode.Id
                 };
 
