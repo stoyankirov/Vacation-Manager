@@ -1,0 +1,45 @@
+:host {
+    width: 100%;
+}
+
+.header {
+    background-color: #003580;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .header-content {
+        width: 100%;
+        max-width: 1120px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        .my-vacation-label {
+            font-size: 32px;
+            color: #FFFFFF;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .auth-buttons-container {
+            button {
+                height: 2.5rem;
+                color: #0071c2;
+                background-color: #FFFFFF;
+                border: 2px solid #0071c2;
+                border-radius: 3px;
+                margin-left: 10px;
+                padding: 0 10px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }  
+}
