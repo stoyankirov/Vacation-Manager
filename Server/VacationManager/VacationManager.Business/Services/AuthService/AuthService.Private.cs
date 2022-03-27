@@ -6,7 +6,7 @@
 
     public partial class AuthService : Service, IAuthService
     {
-        private Guid GenerateConfirmRegistrationCode()
+        private ConfirmRegistrationCode GenerateConfirmRegistrationCode()
         {
             ConfirmRegistrationCode confirmationCode = new ConfirmRegistrationCode();
             confirmationCode.Id = Guid.NewGuid();
@@ -17,7 +17,7 @@
 
             this._confirmRegistrationCodeRepository.AddAsync(confirmationCode);
 
-            return confirmationCode.Id;
+            return confirmationCode;
         }
     }
 }

@@ -10,11 +10,14 @@ namespace VacationManager.API
     using System;
     using System.Reflection;
     using VacationManager.API.Extensions;
+    using VacationManager.Business;
     using VacationManager.Business.Contracts.Services;
     using VacationManager.Business.Services.AuthService;
+    using VacationManager.Business.Services.Notification;
     using VacationManager.Data;
     using VacationManager.Data.Contracts;
     using VacationManager.Data.Repositories;
+    using VacationManager.Domain.Models.Configuration;
 
     public class Startup
     {
@@ -43,7 +46,10 @@ namespace VacationManager.API
                 .UseSqlServer(this._configuration["Secrets:ConnectionString"])
             );
 
+            services.Configure<BusinessEmailCredentials>(this._configuration.GetSection("Credentials"));
+
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IConfirmRegistrationCodeRepository, ConfirmRegistrationCodeRepository>();

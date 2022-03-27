@@ -12,12 +12,15 @@
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfirmRegistrationCodeRepository _confirmRegistrationCodeRepository;
+        private readonly INotificationService _notificationService;
 
         public AuthService(IUserRepository userRepository,
-            IConfirmRegistrationCodeRepository confirmRegistrationCodeRepository)
+            IConfirmRegistrationCodeRepository confirmRegistrationCodeRepository,
+            INotificationService notificationService)
         {
             this._userRepository = userRepository;
             this._confirmRegistrationCodeRepository = confirmRegistrationCodeRepository;
+            this._notificationService = notificationService;
         }
 
         public bool UserExists(string email)
@@ -35,7 +38,7 @@
 
             using (TransactionScope scope = new TransactionScope())
             {
-                var codeId = this.GenerateConfirmRegistrationCode();
+                var confirmationCode = this.GenerateConfirmRegistrationCode();
 
                 var userEntity = new User()
                 {
@@ -43,10 +46,12 @@
                     Email = request.Email,
                     Password = passwordHash,
                     PasswordSalt = passwordSalt,
-                    ConfirmRegistrationCodeId = codeId
+                    ConfirmRegistrationCodeId = confirmationCode.Id
                 };
 
                 this._userRepository.AddAsync(userEntity);
+
+                this._notificationService.SendRegisterConfirmationEmail(userEntity.Email, confirmationCode.Code);
 
                 scope.Complete();
             }
