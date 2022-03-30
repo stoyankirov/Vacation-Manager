@@ -21,7 +21,8 @@
         public virtual void AddAsync(TEntity entity)
         {
             this.Entities.Add(entity);
-            this.DbContext.SaveChanges();
+
+            this.DbContext.SaveChangesAsync();
         }
 
         public Task<int> CountAllAsync()
@@ -34,19 +35,18 @@
             throw new NotImplementedException();
         }
 
-        public Task<IList<TEntity>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task<List<TEntity>> GetAllAsync()
+            => this.Entities.ToListAsync();
 
-        public Task<TEntity> GetByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+
+        public virtual Task<TEntity> GetByIdAsync(Guid id)
+            => this.Entities.FindAsync(id).AsTask();
 
         public Task UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            this.Entities.Update(entity);
+
+            return this.DbContext.SaveChangesAsync();
         }
     }
 }

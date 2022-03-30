@@ -4,6 +4,7 @@
     {
         Unknown = 0,
         UserExists = 1,
+        IncorrectConfirmationCode = 2,
 
         InvalidRole = 10
     }

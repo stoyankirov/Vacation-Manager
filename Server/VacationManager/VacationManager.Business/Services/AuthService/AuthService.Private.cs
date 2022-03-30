@@ -12,16 +12,36 @@
         {
             base.ValidateRequest(request);
 
-            if (request is RegisterRequest)
+            switch (request)
             {
-                var registerRequest = request as RegisterRequest;
+                case RegisterRequest:
 
-                if (registerRequest.UserRole != Domain.Enums.Role.Admin ||
-                    registerRequest.UserRole != Domain.Enums.Role.User ||
-                    registerRequest.UserRole != Domain.Enums.Role.Owner)
-                {
-                    throw new ArgumentException($"Invalid {nameof(Domain.Enums.Role)}");
-                }
+                    var registerRequest = request as RegisterRequest;
+
+                    if (registerRequest.UserRole != Domain.Enums.Role.Admin &&
+                        registerRequest.UserRole != Domain.Enums.Role.User &&
+                        registerRequest.UserRole != Domain.Enums.Role.Owner)
+                    {
+                        throw new ArgumentException($"Invalid {nameof(Domain.Enums.Role)}");
+                    }
+
+                    break;
+
+                case ConfirmRegistrationRequest:
+
+                    var confirmRegistrationRequest = request as ConfirmRegistrationRequest;
+
+                    if (confirmRegistrationRequest.ConfirmationCode == null)
+                        throw new ArgumentNullException($"Invalid {nameof(confirmRegistrationRequest.ConfirmationCode)}");
+
+                    if (confirmRegistrationRequest.ConfirmationCode.Length != 6)
+                        throw new ArgumentException($"Invalid {nameof(confirmRegistrationRequest.ConfirmationCode)}");
+
+                    if (confirmRegistrationRequest.UserId == Guid.Empty)
+                        throw new ArgumentNullException($"Invalid {nameof(ConfirmRegistrationRequest)}");
+
+                    break;
+
             }
         }
 

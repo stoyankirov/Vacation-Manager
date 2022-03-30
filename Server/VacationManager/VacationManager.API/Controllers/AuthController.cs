@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using System.Threading.Tasks;
     using VacationManager.Business.Contracts.Services;
     using VacationManager.Domain.Enums;
     using VacationManager.Domain.Models;
@@ -29,7 +30,21 @@
                 return Conflict(new Message(StatusCodes.Status409Conflict, MessageCode.UserExists));
             }
 
-            this._authService.Register(request);
+            var response = this._authService.Register(request);
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("ConfirmRegistration")]
+        public async Task<IActionResult> ConfirmRegistration(ConfirmRegistrationRequest request)
+        {
+            bool successfullyConfirmed = await this._authService.ConfirmRegistration(request);
+
+            if (!successfullyConfirmed)
+            {
+                return Conflict(new Message(StatusCodes.Status409Conflict, MessageCode.IncorrectConfirmationCode));
+            }
 
             return Ok();
         }
