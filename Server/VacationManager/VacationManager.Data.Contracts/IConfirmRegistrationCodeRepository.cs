@@ -1,13 +1,10 @@
 ﻿namespace VacationManager.Data.Contracts
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using VacationManager.Domain.Entities;
 
-    public interface IConfirmRegistrationCodeRepository
+    public interface IConfirmRegistrationCodeRepository : IRepository<ConfirmRegistrationCode>
     {
-        /// <summary>
-        /// Add an entity.
-        /// <param name="entity">The entity instance.</param>
-        /// </summary>
-        void AddAsync(ConfirmRegistrationCode entity);
     }
 }

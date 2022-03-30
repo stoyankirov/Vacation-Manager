@@ -16,7 +16,7 @@
         ///  Get all entities.
         /// </summary>
         /// <returns></returns>
-        Task<IList<TEntity>> GetAllAsync();
+        Task<List<TEntity>> GetAllAsync();
 
         /// <summary>
         /// Add an entity.

@@ -16,8 +16,8 @@
             {
                 var registerRequest = request as RegisterRequest;
 
-                if (registerRequest.UserRole != Domain.Enums.Role.Admin ||
-                    registerRequest.UserRole != Domain.Enums.Role.User ||
+                if (registerRequest.UserRole != Domain.Enums.Role.Admin &&
+                    registerRequest.UserRole != Domain.Enums.Role.User &&
                     registerRequest.UserRole != Domain.Enums.Role.Owner)
                 {
                     throw new ArgumentException($"Invalid {nameof(Domain.Enums.Role)}");
