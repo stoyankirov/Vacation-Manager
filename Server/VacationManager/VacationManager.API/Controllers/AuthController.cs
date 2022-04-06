@@ -48,5 +48,14 @@
 
             return Ok();
         }
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login(LoginRequest request)
+        {
+            var result = await this._authService.Login(request);
+
+            return Ok(result);
+        }
     }
 }

@@ -11,5 +11,7 @@
         Guid Register(RegisterRequest request);
 
         Task<bool> ConfirmRegistration(ConfirmRegistrationRequest request);
+
+        Task<string> Login(LoginRequest request);
     }
 }

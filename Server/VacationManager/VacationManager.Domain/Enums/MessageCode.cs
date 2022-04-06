@@ -5,6 +5,8 @@
         Unknown = 0,
         UserExists = 1,
         IncorrectConfirmationCode = 2,
+        NotExistingUser = 3,
+        AccountNotConfirmed = 4,
 
         InvalidRole = 10
     }

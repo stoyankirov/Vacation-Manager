@@ -33,9 +33,10 @@
         {
             this.ValidateRequest(request);
 
-            var passwordSalt = string.Empty;
+            var passwordSalt = PasswordHasher.GeneratePasswordSalt();
+
             var passwordHash = PasswordHasher
-                .Hash(request.Password, out passwordSalt);
+                .Hash(request.Password, passwordSalt);
 
             var userId = Guid.Empty;
 
@@ -81,6 +82,22 @@
             }
 
             return successfullyConfirmed;
+        }
+
+        public async Task<string> Login(LoginRequest request)
+        {
+            this.ValidateRequest(request);
+
+            var user = this._userRepository.GetUserByEmail(request.Email);
+
+            if (user == null || user.IsConfirmed == false)
+                throw new ArgumentException("Login failed");
+
+            this.ValidatePassword(user, request.Password);
+
+            // Generate JWT token
+
+            return "jwt";
         }
     }
 }

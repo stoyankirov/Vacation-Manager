@@ -6,10 +6,8 @@
 
     public static class PasswordHasher
     {
-        public static string Hash(string password, out string passwordSalt)
+        public static string Hash(string password, string passwordSalt)
         {
-            passwordSalt = Guid.NewGuid().ToString("N");
-
             string hash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: password + passwordSalt,
                 salt: Encoding.ASCII.GetBytes(passwordSalt),
@@ -18,6 +16,13 @@
                 numBytesRequested: 256 / 8));
 
             return hash;
+        }
+
+        public static string GeneratePasswordSalt()
+        {
+            var passwordSalt = Guid.NewGuid().ToString("N");
+
+            return passwordSalt;
         }
     }
 }
