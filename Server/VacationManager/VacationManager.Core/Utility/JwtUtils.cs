@@ -8,6 +8,7 @@
     using System.Security.Claims;
     using System.Text;
     using VacationManager.Domain.Entities;
+    using VacationManager.Domain.Enums;
     using VacationManager.Domain.Models;
 
     public class JwtUtils : IJwtUtils
@@ -23,12 +24,14 @@
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(this._secrets.JwtSecret.ToString());
+            var role = (Role)user.Role;
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim("id", user.Id.ToString()),
+                    new Claim("Id", user.Id.ToString()),
+                    new Claim("Role", role.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

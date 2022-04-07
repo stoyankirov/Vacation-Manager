@@ -1,5 +1,6 @@
 namespace VacationManager.API
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
@@ -71,6 +72,17 @@ namespace VacationManager.API
                         .AllowAnyMethod()
                         .AllowAnyHeader());
             });
+
+            // Policy based authorization
+            services.AddAuthorization(configure =>
+            {
+                configure.AddPolicy("Owner", policyBuilder =>
+                {
+                    policyBuilder.AddRequirements(new OwnerRequirement(true));
+                });
+            });
+
+            services.AddSingleton<IAuthorizationHandler, OwnerRequirementHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
