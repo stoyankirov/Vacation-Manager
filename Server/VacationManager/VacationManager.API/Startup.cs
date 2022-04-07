@@ -9,6 +9,7 @@ namespace VacationManager.API
     using Microsoft.OpenApi.Models;
     using System;
     using System.Reflection;
+    using VacationManager.API.Configuration;
     using VacationManager.API.Extensions;
     using VacationManager.Business.Contracts.Services;
     using VacationManager.Business.Services.AuthService;
@@ -80,6 +81,8 @@ namespace VacationManager.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "VacationManager.API v1"));
             }
+
+            app.UseMiddleware<JwtMiddleware>();
 
             app.ConfigureExceptionHandler();
 
