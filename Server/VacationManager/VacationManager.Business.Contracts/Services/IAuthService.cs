@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
     using VacationManager.Domain.Requests;
+    using VacationManager.Domain.Responses;
 
     public interface IAuthService
     {
@@ -12,6 +13,6 @@
 
         Task<bool> ConfirmRegistration(ConfirmRegistrationRequest request);
 
-        Task<string> Login(LoginRequest request);
+        LoginResponse Login(LoginRequest request);
     }
 }

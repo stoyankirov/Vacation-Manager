@@ -10,13 +10,14 @@ namespace VacationManager.API
     using System;
     using System.Reflection;
     using VacationManager.API.Extensions;
-    using VacationManager.Business;
     using VacationManager.Business.Contracts.Services;
     using VacationManager.Business.Services.AuthService;
     using VacationManager.Business.Services.Notification;
+    using VacationManager.Core.Utility;
     using VacationManager.Data;
     using VacationManager.Data.Contracts;
     using VacationManager.Data.Repositories;
+    using VacationManager.Domain.Models;
     using VacationManager.Domain.Models.Configuration;
 
     public class Startup
@@ -39,13 +40,13 @@ namespace VacationManager.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
 
             services.AddDbContext<VacationManagerContext>(options => options
                 .UseSqlServer(this._configuration["Secrets:ConnectionString"])
             );
 
+            services.Configure<Secrets>(this._configuration.GetSection("Secrets"));
             services.Configure<BusinessEmailCredentials>(this._configuration.GetSection("Credentials"));
 
             services.AddScoped<IAuthService, AuthService>();
@@ -53,6 +54,8 @@ namespace VacationManager.API
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IConfirmRegistrationCodeRepository, ConfirmRegistrationCodeRepository>();
+
+            services.AddScoped<IJwtUtils, JwtUtils>();
 
             services.AddSwaggerGen(c =>
             {
