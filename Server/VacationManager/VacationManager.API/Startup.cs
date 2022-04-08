@@ -11,6 +11,7 @@ namespace VacationManager.API
     using System;
     using System.Reflection;
     using VacationManager.API.Configuration;
+    using VacationManager.API.Configuration.Roles;
     using VacationManager.API.Extensions;
     using VacationManager.Business.Contracts.Services;
     using VacationManager.Business.Services.AuthService;
@@ -80,9 +81,19 @@ namespace VacationManager.API
                 {
                     policyBuilder.AddRequirements(new OwnerRequirement(true));
                 });
+                configure.AddPolicy("User", policyBuilder =>
+                {
+                    policyBuilder.AddRequirements(new UserRequirement(true));
+                });
+                configure.AddPolicy("Admin", policyBuilder =>
+                {
+                    policyBuilder.AddRequirements(new AdminRequirement(true));
+                });
             });
 
             services.AddSingleton<IAuthorizationHandler, OwnerRequirementHandler>();
+            services.AddSingleton<IAuthorizationHandler, UserRequirementHandler>();
+            services.AddSingleton<IAuthorizationHandler, AdminRequirementHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

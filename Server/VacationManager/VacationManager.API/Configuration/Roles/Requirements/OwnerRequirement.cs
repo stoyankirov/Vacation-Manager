@@ -1,4 +1,4 @@
-﻿namespace VacationManager.API.Configuration
+﻿namespace VacationManager.API.Configuration.Roles
 {
     using Microsoft.AspNetCore.Authorization;
 
