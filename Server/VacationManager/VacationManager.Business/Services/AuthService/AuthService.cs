@@ -8,18 +8,22 @@
     using VacationManager.Data.Contracts;
     using VacationManager.Domain.Entities;
     using VacationManager.Domain.Requests;
+    using VacationManager.Domain.Responses;
 
     public partial class AuthService : Service, IAuthService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IJwtUtils _jwtUtils;
         private readonly IConfirmRegistrationCodeRepository _confirmRegistrationCodeRepository;
         private readonly INotificationService _notificationService;
 
         public AuthService(IUserRepository userRepository,
+            IJwtUtils jwtUtils,
             IConfirmRegistrationCodeRepository confirmRegistrationCodeRepository,
             INotificationService notificationService)
         {
             this._userRepository = userRepository;
+            this._jwtUtils = jwtUtils;
             this._confirmRegistrationCodeRepository = confirmRegistrationCodeRepository;
             this._notificationService = notificationService;
         }
@@ -33,9 +37,10 @@
         {
             this.ValidateRequest(request);
 
-            var passwordSalt = string.Empty;
+            var passwordSalt = PasswordHasher.GeneratePasswordSalt();
+
             var passwordHash = PasswordHasher
-                .Hash(request.Password, out passwordSalt);
+                .Hash(request.Password, passwordSalt);
 
             var userId = Guid.Empty;
 
@@ -81,6 +86,29 @@
             }
 
             return successfullyConfirmed;
+        }
+
+        public LoginResponse Login(LoginRequest request)
+        {
+            this.ValidateRequest(request);
+
+            var user = this._userRepository.GetUserByEmail(request.Email);
+
+            if (user == null)
+                throw new ArgumentNullException("Login failed");
+
+            if (user.IsConfirmed == false)
+                throw new ArgumentException("Not confirmed");
+
+            this.ValidatePassword(user, request.Password);
+
+            var token = this._jwtUtils.GenerateJwtToken(user);
+
+            // Generate JWT token
+
+            var response = new LoginResponse(user.Email, token);
+
+            return response;
         }
     }
 }

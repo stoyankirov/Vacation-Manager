@@ -2,8 +2,10 @@
 {
     using System;
     using VacationManager.Business.Contracts.Services;
+    using VacationManager.Core.Utility;
     using VacationManager.Domain;
     using VacationManager.Domain.Entities;
+    using VacationManager.Domain.Enums;
     using VacationManager.Domain.Requests;
 
     public partial class AuthService : Service, IAuthService
@@ -41,7 +43,6 @@
                         throw new ArgumentNullException($"Invalid {nameof(ConfirmRegistrationRequest)}");
 
                     break;
-
             }
         }
 
@@ -57,6 +58,14 @@
             this._confirmRegistrationCodeRepository.AddAsync(confirmationCode);
 
             return confirmationCode;
+        }
+
+        private void ValidatePassword(User user, string requestedPassword)
+        {
+            var hash = PasswordHasher.Hash(requestedPassword, user.PasswordSalt);
+
+            if (user.Password != hash)
+                throw new ArgumentException("Login failed");
         }
     }
 }

@@ -48,5 +48,14 @@
 
             return Ok();
         }
+
+        [HttpPost]
+        [Route("Login")]
+        public IActionResult Login(LoginRequest request)
+        {
+            var result = this._authService.Login(request);
+
+            return Ok(result);
+        }
     }
 }
