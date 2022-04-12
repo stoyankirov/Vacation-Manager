@@ -8,15 +8,17 @@
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AdminRequirement requirement)
         {
-            var hasClaim = context.User.HasClaim(claim => claim.Type == "Role");
+            var hasClaim = context.User.HasClaim(claim => claim.Type == "IsInRole");
 
             if (!hasClaim)
             {
                 return Task.CompletedTask;
             }
 
-            var claimValue = context.User.FindFirst(claim => claim.Type == "Role").Value;
-            var isAdmin = context.User.FindFirst(claim => claim.Type == "Role").Value.Equals(Role.Admin);
+            var claimValue = context.User.FindFirst(claim => claim.Type == "IsInRole").Value;
+            var role = (int)Role.Admin;
+
+            var isAdmin = int.Parse(claimValue).Equals(role);
 
             if (claimValue != null && isAdmin)
             {

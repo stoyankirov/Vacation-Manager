@@ -8,15 +8,17 @@
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, UserRequirement requirement)
         {
-            var hasClaim = context.User.HasClaim(claim => claim.Type == "Role");
+            var hasClaim = context.User.HasClaim(claim => claim.Type == "IsInRole");
 
             if (!hasClaim)
             {
                 return Task.CompletedTask;
             }
 
-            var claimValue = context.User.FindFirst(claim => claim.Type == "Role").Value;
-            var isUser = context.User.FindFirst(claim => claim.Type == "Role").Value.Equals(Role.User);
+            var claimValue = context.User.FindFirst(claim => claim.Type == "IsInRole").Value;
+            var role = (int)Role.User;
+
+            var isUser = int.Parse(claimValue).Equals(role);
 
             if (claimValue != null && isUser)
             {

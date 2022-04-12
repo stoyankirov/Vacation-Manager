@@ -1,15 +1,19 @@
 namespace VacationManager.API
 {
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
     using System;
     using System.Reflection;
+    using System.Text;
     using VacationManager.API.Configuration;
     using VacationManager.API.Configuration.Roles;
     using VacationManager.API.Extensions;
@@ -65,6 +69,11 @@ namespace VacationManager.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "VacationManager.API", Version = "v1" });
             });
 
+            services
+                .AddMvc()
+                .AddMvcOptions(mvc => mvc.EnableEndpointRouting = false)
+                .SetCompatibilityVersion(CompatibilityVersion.Latest);
+
             // Cors configuration
             services.AddCors(options =>
             {
@@ -74,26 +83,47 @@ namespace VacationManager.API
                         .AllowAnyHeader());
             });
 
+            var key = Encoding.UTF8.GetBytes(this._configuration["Secrets:JwtSecret"]);
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = false;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
             // Policy based authorization
             services.AddAuthorization(configure =>
             {
-                configure.AddPolicy("Owner", policyBuilder =>
+                configure.AddPolicy("User", policy =>
                 {
-                    policyBuilder.AddRequirements(new OwnerRequirement(true));
+                    policy.AddRequirements(new UserRequirement(true));
                 });
-                configure.AddPolicy("User", policyBuilder =>
+                configure.AddPolicy("Admin", policy =>
                 {
-                    policyBuilder.AddRequirements(new UserRequirement(true));
+                    policy.AddRequirements(new AdminRequirement(true));
                 });
-                configure.AddPolicy("Admin", policyBuilder =>
+                configure.AddPolicy("Owner", policy =>
                 {
-                    policyBuilder.AddRequirements(new AdminRequirement(true));
+                    policy.AddRequirements(new OwnerRequirement(true));
                 });
             });
 
-            services.AddSingleton<IAuthorizationHandler, OwnerRequirementHandler>();
             services.AddSingleton<IAuthorizationHandler, UserRequirementHandler>();
             services.AddSingleton<IAuthorizationHandler, AdminRequirementHandler>();
+            services.AddSingleton<IAuthorizationHandler, OwnerRequirementHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -115,7 +145,9 @@ namespace VacationManager.API
 
             app.UseCors("CorsPolicy");
 
-            app.UseAuthorization();
+            app.UseAuthentication();
+
+            app.UseMvc();
 
             app.UseEndpoints(endpoints =>
             {
