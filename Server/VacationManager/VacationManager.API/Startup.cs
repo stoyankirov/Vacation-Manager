@@ -24,6 +24,7 @@ namespace VacationManager.API
     using VacationManager.Data;
     using VacationManager.Data.Contracts;
     using VacationManager.Data.Repositories;
+    using VacationManager.Domain.Constants;
     using VacationManager.Domain.Models;
     using VacationManager.Domain.Models.Configuration;
 
@@ -107,15 +108,15 @@ namespace VacationManager.API
             // Policy based authorization
             services.AddAuthorization(configure =>
             {
-                configure.AddPolicy("User", policy =>
+                configure.AddPolicy(AuthenticationPolicy.User, policy =>
                 {
                     policy.AddRequirements(new UserRequirement(true));
                 });
-                configure.AddPolicy("Admin", policy =>
+                configure.AddPolicy(AuthenticationPolicy.Admin, policy =>
                 {
                     policy.AddRequirements(new AdminRequirement(true));
                 });
-                configure.AddPolicy("Owner", policy =>
+                configure.AddPolicy(AuthenticationPolicy.Owner, policy =>
                 {
                     policy.AddRequirements(new OwnerRequirement(true));
                 });

@@ -1,6 +1,5 @@
 ﻿namespace VacationManager.Domain.Models
 {
-    using System.Net;
     using System.Text.Json.Serialization;
     using VacationManager.Domain.Enums;
 
