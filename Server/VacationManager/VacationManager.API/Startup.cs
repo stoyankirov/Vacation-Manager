@@ -51,7 +51,8 @@ namespace VacationManager.API
             services.AddControllers();
 
             services.AddDbContext<VacationManagerContext>(options => options
-                .UseSqlServer(this._configuration["Secrets:ConnectionString"])
+                .UseSqlServer(this._configuration["Secrets:ConnectionString"]),
+                ServiceLifetime.Transient
             );
 
             services.Configure<Secrets>(this._configuration.GetSection("Secrets"));
