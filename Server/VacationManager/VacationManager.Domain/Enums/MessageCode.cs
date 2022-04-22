@@ -7,6 +7,7 @@
         IncorrectConfirmationCode = 2,
         NotExistingUser = 3,
         AccountNotConfirmed = 4,
+        LoginFailed = 5,
 
         InvalidRole = 10
     }

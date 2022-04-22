@@ -24,6 +24,7 @@ namespace VacationManager.API
     using VacationManager.Data;
     using VacationManager.Data.Contracts;
     using VacationManager.Data.Repositories;
+    using VacationManager.Domain.Constants;
     using VacationManager.Domain.Models;
     using VacationManager.Domain.Models.Configuration;
 
@@ -50,80 +51,23 @@ namespace VacationManager.API
             services.AddControllers();
 
             services.AddDbContext<VacationManagerContext>(options => options
-                .UseSqlServer(this._configuration["Secrets:ConnectionString"])
+                .UseSqlServer(this._configuration["Secrets:ConnectionString"]),
+                ServiceLifetime.Transient
             );
 
-            services.Configure<Secrets>(this._configuration.GetSection("Secrets"));
-            services.Configure<BusinessEmailCredentials>(this._configuration.GetSection("Credentials"));
+            ServiceConfiguration.AddSecretsConfigurations(services, this._configuration);
+            ServiceConfiguration.AddScopedConfigurations(services);
 
-            services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<INotificationService, NotificationService>();
 
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IConfirmRegistrationCodeRepository, ConfirmRegistrationCodeRepository>();
-
-            services.AddScoped<IJwtUtils, JwtUtils>();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "VacationManager.API", Version = "v1" });
-            });
+            ServiceConfiguration.AddSwaggerConfigurations(services);
 
             services
                 .AddMvc()
                 .AddMvcOptions(mvc => mvc.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
 
-            // Cors configuration
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
-            });
-
-            var key = Encoding.UTF8.GetBytes(this._configuration["Secrets:JwtSecret"]);
-
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = false;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
-
-            // Policy based authorization
-            services.AddAuthorization(configure =>
-            {
-                configure.AddPolicy("User", policy =>
-                {
-                    policy.AddRequirements(new UserRequirement(true));
-                });
-                configure.AddPolicy("Admin", policy =>
-                {
-                    policy.AddRequirements(new AdminRequirement(true));
-                });
-                configure.AddPolicy("Owner", policy =>
-                {
-                    policy.AddRequirements(new OwnerRequirement(true));
-                });
-            });
-
-            services.AddSingleton<IAuthorizationHandler, UserRequirementHandler>();
-            services.AddSingleton<IAuthorizationHandler, AdminRequirementHandler>();
-            services.AddSingleton<IAuthorizationHandler, OwnerRequirementHandler>();
+            ServiceConfiguration.AddCorsConfigurations(services);
+            ServiceConfiguration.AddAuthConfigurations(services, this._configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

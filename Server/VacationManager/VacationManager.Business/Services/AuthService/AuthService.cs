@@ -60,7 +60,8 @@
 
                 this._userRepository.AddAsync(user);
 
-                this._notificationService.SendRegisterConfirmationEmail(user.Email, confirmationCode.Code);
+                this._notificationService
+                    .SendRegisterConfirmationEmail(user.Email, confirmationCode.Code);
 
                 userId = user.Id;
 
@@ -76,13 +77,15 @@
 
             bool successfullyConfirmed = false;
 
-            var user = await this._userRepository.GetByIdAsync(request.UserId);
+            var user = await this._userRepository
+                .GetByIdAsync(request.UserId);
 
             if (user.ConfirmRegistrationCode.Code == request.ConfirmationCode)
             {
                 successfullyConfirmed = true;
                 user.IsConfirmed = true;
-                await this._userRepository.UpdateAsync(user);
+                await this._userRepository
+                    .UpdateAsync(user);
             }
 
             return successfullyConfirmed;
@@ -92,19 +95,13 @@
         {
             this.ValidateRequest(request);
 
-            var user = this._userRepository.GetUserByEmail(request.Email);
+            var user = this._userRepository
+                .GetUserByEmail(request.Email);
 
-            if (user == null)
-                throw new ArgumentNullException("Login failed");
-
-            if (user.IsConfirmed == false)
-                throw new ArgumentException("Not confirmed");
-
+            this.ValidateUser(user);
             this.ValidatePassword(user, request.Password);
 
             var token = this._jwtUtils.GenerateJwtToken(user);
-
-            // Generate JWT token
 
             var response = new LoginResponse(user.Email, token);
 

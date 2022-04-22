@@ -20,9 +20,9 @@
 
                     var registerRequest = request as RegisterRequest;
 
-                    if (registerRequest.UserRole != Domain.Enums.Role.Admin &&
-                        registerRequest.UserRole != Domain.Enums.Role.User &&
-                        registerRequest.UserRole != Domain.Enums.Role.Owner)
+                    if (registerRequest.UserRole != Role.Admin &&
+                        registerRequest.UserRole != Role.User &&
+                        registerRequest.UserRole != Role.Owner)
                     {
                         throw new ArgumentException($"Invalid {nameof(Domain.Enums.Role)}");
                     }
@@ -60,12 +60,21 @@
             return confirmationCode;
         }
 
+        private void ValidateUser(User user)
+        {
+            if (user == null)
+                throw new ArgumentNullException("The username or password is incorrect");
+
+            if (user.IsConfirmed == false)
+                throw new ArgumentException("Not confirmed");
+        }
+
         private void ValidatePassword(User user, string requestedPassword)
         {
             var hash = PasswordHasher.Hash(requestedPassword, user.PasswordSalt);
 
             if (user.Password != hash)
-                throw new ArgumentException("Login failed");
+                throw new ArgumentException("The username or password is incorrect");
         }
     }
 }
