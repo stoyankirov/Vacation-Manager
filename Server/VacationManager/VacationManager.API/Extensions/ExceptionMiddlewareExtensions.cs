@@ -3,7 +3,10 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Http;
+    using System;
     using System.Net;
+    using System.Net.Http;
+    using VacationManager.Core.Constants;
     using VacationManager.Domain.Models;
 
     public static class ExceptionMiddlewareExtensions
@@ -19,13 +22,28 @@
 
                     var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
 
+                    var exceptionMessage = contextFeature.Error.Message;
+
+                    var exceptionDetails = new ExceptionDetails();
+
                     if (contextFeature != null)
                     {
-                        await context.Response.WriteAsync(new ExceptionDetails
+                        exceptionDetails.Message = exceptionMessage;
+
+                        switch (exceptionMessage)
                         {
-                            StatusCode = context.Response.StatusCode,
-                            Message = contextFeature.Error.Message
-                        }.ToString());
+                            case ExceptionMessages.IncorrectEmailOrPassword:
+                                context.Response.StatusCode =
+                                exceptionDetails.StatusCode = (int)HttpStatusCode.Conflict;
+                                break;
+
+                            case ExceptionMessages.NotConfirmedRegistration:
+                                context.Response.StatusCode =
+                                exceptionDetails.StatusCode = (int)HttpStatusCode.Conflict;
+                                break;
+                        }
+
+                        await context.Response.WriteAsync(exceptionDetails.ToString());
                     }
                 });
             });

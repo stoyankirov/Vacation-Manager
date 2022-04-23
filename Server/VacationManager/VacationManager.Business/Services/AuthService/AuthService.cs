@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System.Transactions;
     using VacationManager.Business.Contracts.Services;
+    using VacationManager.Core.Constants;
     using VacationManager.Core.Utility;
     using VacationManager.Data.Contracts;
     using VacationManager.Domain.Entities;
@@ -98,7 +99,12 @@
             var user = this._userRepository
                 .GetUserByEmail(request.Email);
 
-            this.ValidateUser(user);
+            if (user == null)
+                throw new ArgumentException(ExceptionMessages.IncorrectEmailOrPassword);
+
+            if (user.IsConfirmed == false)
+                throw new ArgumentException(ExceptionMessages.NotConfirmedRegistration);
+
             this.ValidatePassword(user, request.Password);
 
             var token = this._jwtUtils.GenerateJwtToken(user);
