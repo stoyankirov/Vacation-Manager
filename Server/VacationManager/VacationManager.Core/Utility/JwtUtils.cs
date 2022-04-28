@@ -1,14 +1,13 @@
 ﻿namespace VacationManager.Core.Utility
 {
+    using System;
     using Microsoft.Extensions.Options;
     using Microsoft.IdentityModel.Tokens;
-    using System;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
     using System.Security.Claims;
     using System.Text;
     using VacationManager.Domain.Entities;
-    using VacationManager.Domain.Enums;
     using VacationManager.Domain.Models;
 
     public class JwtUtils : IJwtUtils
@@ -35,6 +34,7 @@
                 Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
@@ -46,6 +46,7 @@
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(this._secrets.JwtSecret.ToString());
+
             try
             {
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
@@ -61,12 +62,10 @@
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userId = Guid.Parse(jwtToken.Claims.First(x => x.Type == "Id").Value);
 
-                // return user id from JWT token if validation successful
                 return userId;
             }
             catch
             {
-                // return null if validation fails
                 return null;
             }
         }

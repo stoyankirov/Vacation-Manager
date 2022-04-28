@@ -3,9 +3,7 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics;
     using Microsoft.AspNetCore.Http;
-    using System;
     using System.Net;
-    using System.Net.Http;
     using VacationManager.Core.Constants;
     using VacationManager.Domain.Models;
 

@@ -1,7 +1,7 @@
 ﻿namespace VacationManager.Core.Utility
 {
-    using Microsoft.AspNetCore.Cryptography.KeyDerivation;
     using System;
+    using Microsoft.AspNetCore.Cryptography.KeyDerivation;
     using System.Text;
 
     public static class PasswordHasher

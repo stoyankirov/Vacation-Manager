@@ -1,5 +1,6 @@
 namespace VacationManager.API
 {
+    using System;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,6 @@ namespace VacationManager.API
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using System;
     using System.Reflection;
     using VacationManager.API.Configuration;
     using VacationManager.API.Extensions;
