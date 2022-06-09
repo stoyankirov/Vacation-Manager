@@ -1,12 +1,15 @@
 ﻿namespace VacationManager.API.Controllers
 {
+    using FluentResult;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using VacationManager.Business.Contracts.Services;
     using VacationManager.Domain.Enums;
     using VacationManager.Domain.Models;
     using VacationManager.Domain.Requests;
+    using VacationManager.Domain.Responses;
 
     [ApiController]
     [Route("[controller]")]
@@ -21,9 +24,9 @@
 
         [HttpPost]
         [Route("Register")]
-        public IActionResult Register(RegisterRequest request)
+        public async Task<IActionResult> Register(RegisterRequest request)
         {
-            bool userExists = this._authService.UserExists(request.Email);
+            bool userExists = await this._authService.UserExists(request.Email);
 
             if (userExists)
             {
@@ -37,25 +40,14 @@
 
         [HttpPost]
         [Route("ConfirmRegistration")]
-        public async Task<IActionResult> ConfirmRegistration(ConfirmRegistrationRequest request)
-        {
-            bool successfullyConfirmed = await this._authService.ConfirmRegistration(request);
-
-            if (!successfullyConfirmed)
-            {
-                return Conflict(new Message(StatusCodes.Status409Conflict, MessageCode.IncorrectConfirmationCode));
-            }
-
-            return Ok();
-        }
+        public Task<IActionResult> ConfirmRegistration(ConfirmRegistrationRequest request)
+            => this._authService.ConfirmRegistration(request).ToActionResultAsync(this);
 
         [HttpPost]
         [Route("Login")]
-        public IActionResult Login(LoginRequest request)
-        {
-            var result = this._authService.Login(request);
-
-            return Ok(result);
-        }
+        [ProducesResponseType(typeof(Result<LoginResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public Task<IActionResult> Login([Required] LoginRequest request)
+            => this._authService.Login(request).ToActionResultAsync(this);
     }
 }

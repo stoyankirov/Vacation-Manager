@@ -1,7 +1,6 @@
 namespace VacationManager.API
 {
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
-    using Microsoft.AspNetCore.Authorization;
+    using System;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -9,24 +8,10 @@ namespace VacationManager.API
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using Microsoft.IdentityModel.Tokens;
-    using Microsoft.OpenApi.Models;
-    using System;
     using System.Reflection;
-    using System.Text;
     using VacationManager.API.Configuration;
-    using VacationManager.API.Configuration.Roles;
     using VacationManager.API.Extensions;
-    using VacationManager.Business.Contracts.Services;
-    using VacationManager.Business.Services.AuthService;
-    using VacationManager.Business.Services.Notification;
-    using VacationManager.Core.Utility;
     using VacationManager.Data;
-    using VacationManager.Data.Contracts;
-    using VacationManager.Data.Repositories;
-    using VacationManager.Domain.Constants;
-    using VacationManager.Domain.Models;
-    using VacationManager.Domain.Models.Configuration;
 
     public class Startup
     {
@@ -57,7 +42,6 @@ namespace VacationManager.API
 
             ServiceConfiguration.AddSecretsConfigurations(services, this._configuration);
             ServiceConfiguration.AddScopedConfigurations(services);
-
 
             ServiceConfiguration.AddSwaggerConfigurations(services);
 

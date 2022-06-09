@@ -2,6 +2,7 @@
 {
     using System;
     using VacationManager.Business.Contracts.Services;
+    using VacationManager.Core.Constants;
     using VacationManager.Core.Utility;
     using VacationManager.Domain;
     using VacationManager.Domain.Entities;
@@ -60,21 +61,14 @@
             return confirmationCode;
         }
 
-        private void ValidateUser(User user)
-        {
-            if (user == null)
-                throw new ArgumentNullException("The username or password is incorrect");
-
-            if (user.IsConfirmed == false)
-                throw new ArgumentException("Not confirmed");
-        }
-
-        private void ValidatePassword(User user, string requestedPassword)
+        private bool PasswordMatch(User user, string requestedPassword)
         {
             var hash = PasswordHasher.Hash(requestedPassword, user.PasswordSalt);
 
             if (user.Password != hash)
-                throw new ArgumentException("The username or password is incorrect");
+                return false;
+
+            return true;
         }
     }
 }
