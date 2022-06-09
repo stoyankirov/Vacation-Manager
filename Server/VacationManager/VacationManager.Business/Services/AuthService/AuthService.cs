@@ -1,13 +1,15 @@
 ﻿namespace VacationManager.Business.Services.AuthService
 {
+    using FluentResult;
     using System;
     using System.Threading.Tasks;
     using System.Transactions;
     using VacationManager.Business.Contracts.Services;
-    using VacationManager.Core.Constants;
+    using VacationManager.Business.Factories;
     using VacationManager.Core.Utility;
     using VacationManager.Data.Contracts;
     using VacationManager.Domain.Entities;
+    using VacationManager.Domain.Extensions;
     using VacationManager.Domain.Requests;
     using VacationManager.Domain.Responses;
 
@@ -29,8 +31,8 @@
             this._notificationService = notificationService;
         }
 
-        public bool UserExists(string email)
-            => this._userRepository.GetUserByEmail(email) != null
+        public async Task<bool> UserExists(string email)
+            => await this._userRepository.GetUserByEmail(email) != null
                 ? true
                 : false;
 
@@ -45,8 +47,6 @@
 
             var userId = Guid.Empty;
 
-            using (TransactionScope scope = new TransactionScope())
-            {
                 var confirmationCode = this.GenerateConfirmRegistrationCode();
 
                 var user = new User()
@@ -61,57 +61,50 @@
 
                 this._userRepository.AddAsync(user);
 
-                this._notificationService
-                    .SendRegisterConfirmationEmail(user.Email, confirmationCode.Code);
+                //this._notificationService
+                //    .SendRegisterConfirmationEmail(user.Email, confirmationCode.Code);
 
                 userId = user.Id;
-
-                scope.Complete();
-            }
 
             return userId;
         }
 
-        public async Task<bool> ConfirmRegistration(ConfirmRegistrationRequest request)
+        public Task<Result<bool>> ConfirmRegistration(ConfirmRegistrationRequest request)
         {
-            this.ValidateRequest(request);
-
-            bool successfullyConfirmed = false;
-
-            var user = await this._userRepository
-                .GetByIdAsync(request.UserId);
-
-            if (user.ConfirmRegistrationCode.Code == request.ConfirmationCode)
-            {
-                successfullyConfirmed = true;
-                user.IsConfirmed = true;
-                await this._userRepository
-                    .UpdateAsync(user);
-            }
-
-            return successfullyConfirmed;
+            return Result
+                .Create(request)
+                .MapAsync(request => this._userRepository.GetByIdAsync(request.UserId))
+                .ValidateAsync(user => user != null, ResultComplete.NotFound, "Confirm registration failed.")
+                .ValidateAsync(
+                    user => !user.ConfirmRegistrationCode.Equals(request.ConfirmationCode),
+                    ResultComplete.OperationFailed,
+                    "Confirm registration failed.")
+                .MapAsync(user =>
+                {
+                    user.IsConfirmed = true;
+                    return user;
+                 
+                })
+                .MapAsync(user => this._userRepository.UpdateAsync(user));
+            // return user model
         }
 
-        public LoginResponse Login(LoginRequest request)
+        public Task<Result<LoginResponse>> Login(LoginRequest request)
         {
-            this.ValidateRequest(request);
-
-            var user = this._userRepository
-                .GetUserByEmail(request.Email);
-
-            if (user == null)
-                throw new ArgumentException(ExceptionMessages.IncorrectEmailOrPassword);
-
-            if (user.IsConfirmed == false)
-                throw new ArgumentException(ExceptionMessages.NotConfirmedRegistration);
-
-            this.ValidatePassword(user, request.Password);
-
-            var token = this._jwtUtils.GenerateJwtToken(user);
-
-            var response = new LoginResponse(user.Email, token);
-
-            return response;
+            return Result
+                .Create(request)
+                .MapAsync(request => this._userRepository.GetUserByEmail(request.Email))
+                .ValidateAsync(user => user != null, ResultComplete.NotFound, "Login failed.")
+                .ValidateAsync(user => 
+                    user.IsConfirmed == true, 
+                    ResultComplete.OperationFailed, 
+                    "Registration is not confirmed.")
+                .ValidateAsync(
+                    user => this.PasswordMatch(user, request.Password) == true,
+                    ResultComplete.OperationFailed,
+                    "Login failed.")
+                .MapAsync(user => this._jwtUtils.GenerateJwtToken(user))
+                .MapAsync(AuthFactory.ToLoginResponse);
         }
     }
 }

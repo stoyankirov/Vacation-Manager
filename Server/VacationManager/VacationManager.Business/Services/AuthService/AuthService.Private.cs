@@ -61,12 +61,14 @@
             return confirmationCode;
         }
 
-        private void ValidatePassword(User user, string requestedPassword)
+        private bool PasswordMatch(User user, string requestedPassword)
         {
             var hash = PasswordHasher.Hash(requestedPassword, user.PasswordSalt);
 
             if (user.Password != hash)
-                throw new ArgumentException(ExceptionMessages.IncorrectEmailOrPassword);
+                return false;
+
+            return true;
         }
     }
 }

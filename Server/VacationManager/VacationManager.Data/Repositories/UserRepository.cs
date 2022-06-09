@@ -1,5 +1,6 @@
 ﻿namespace VacationManager.Data.Repositories
 {
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -15,21 +16,22 @@
             this._confirmationCodeRepository = confirmationCodeRepository;
         }
 
-        public override Task<User> GetByIdAsync(Guid id)
+        public async override Task<User> GetByIdAsync(Guid id)
         {
-            var user = base.GetByIdAsync(id);
-            var codes = this._confirmationCodeRepository.GetAllAsync();
+            var user = await base.GetByIdAsync(id);
+            var codes = await this._confirmationCodeRepository.GetAllAsync();
 
             var confirmationCode = this.DbContext.ConfirmRegistrationCodes
-                .FirstOrDefault(x => x.Id == user.Result.ConfirmRegistrationCodeId);
+                .FirstOrDefault(x => x.Id == user.ConfirmRegistrationCodeId);
 
-            user.Result.ConfirmRegistrationCode = confirmationCode;
+            user.ConfirmRegistrationCode = confirmationCode;
 
             return user;
         }
 
-        public User GetUserByEmail(string email)
-            => this.DbContext.Users
-                .FirstOrDefault(u => u.Email == email);
+        public async Task<User> GetUserByEmail(string email)
+            => await this.Entities
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Email.ToUpper() == email.ToUpper());
     }
 }

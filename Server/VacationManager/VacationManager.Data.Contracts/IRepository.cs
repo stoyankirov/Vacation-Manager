@@ -28,7 +28,7 @@
         /// Update an entity.
         /// </summary>
         /// <param name="entity">The entity instance.</param>
-        Task UpdateAsync(TEntity entity);
+        Task<bool> UpdateAsync(TEntity entity);
 
         /// <summary>
         /// Delete an entity.

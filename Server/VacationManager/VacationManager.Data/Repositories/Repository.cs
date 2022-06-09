@@ -39,14 +39,16 @@
             => this.Entities.ToListAsync();
 
 
-        public virtual Task<TEntity> GetByIdAsync(Guid id)
-            => this.Entities.FindAsync(id).AsTask();
+        public virtual async Task<TEntity> GetByIdAsync(Guid id)
+            => await this.Entities.FindAsync(id);
 
-        public Task UpdateAsync(TEntity entity)
+        public async Task<bool> UpdateAsync(TEntity entity)
         {
             this.Entities.Update(entity);
 
-            return this.DbContext.SaveChangesAsync();
+            var rows = await this.DbContext.SaveChangesAsync();
+
+            return rows != 0 ? true : false;
         }
     }
 }
